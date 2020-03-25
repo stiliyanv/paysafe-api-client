@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "paysafe.service.monitor",
+    "type": "java.lang.String",
+    "description": "A description for 'paysafe.service.monitor'"
+  },
+  {
+    "name": "paysafe.service.baseurl",
+    "type": "java.lang.String",
+    "description": "A description for 'paysafe.service.baseurl'"
+  }
+]}
