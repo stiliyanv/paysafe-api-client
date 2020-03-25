@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 import com.paysafe.client.paysafeapiclient.models.Monitor;
 
 @RestController
-@RequestMapping("/paysafeclient")
 public class ServiceMonitorController {
 	
 	@Value("${paysafe.service.baseurl}")
