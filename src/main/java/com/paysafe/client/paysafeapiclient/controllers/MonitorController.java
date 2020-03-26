@@ -9,7 +9,8 @@ import org.springframework.web.client.RestTemplate;
 import com.paysafe.client.paysafeapiclient.models.Monitor;
 
 @RestController
-public class ServiceMonitorController {
+@RequestMapping("/monitor")
+public class MonitorController {
 	
 	@Value("${paysafe.service.baseurl}")
 	private String serviceBaseUrl;
@@ -20,7 +21,7 @@ public class ServiceMonitorController {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@RequestMapping("/verifyservice")
+	@RequestMapping("/servicestatus")
 	public String getServiceStatus() {
 		Monitor monitor = restTemplate.getForObject(serviceBaseUrl.concat(serviceMonitor), Monitor.class);
 		return "3DS Service Status: " + monitor.getStatus();
