@@ -26,4 +26,4 @@ java -jar target/paysafe-api-client-0.0.1-SNAPSHOT.jar
 http://localhost:8090/servicestatus
 ```
 
-> This API makes call to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
+> This API makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
