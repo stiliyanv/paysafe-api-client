@@ -20,10 +20,10 @@ mvn clean install
 java -jar target/paysafe-api-client-0.0.1-SNAPSHOT.jar
 ```
 
-## Execute calls
+## API
 
 ```
 http://localhost:8090/servicestatus
 ```
 
-> This API makes call to `/threedsecure/monitor` and if everything is ok, it should return `3DS Service Status: READY`.
+> This API makes call to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
