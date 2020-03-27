@@ -1,9 +1,9 @@
 package com.paysafe.client.paysafeapiclient.models;
 
 public class Account {
-
-	private String id;
 	
+	private String id;
+
 	public Account() {
 
 	}
