@@ -1,6 +1,6 @@
 # paysafe-api-client
 
-Spring Boot project that integrates PaySafe API. The program is able to execute requests to the [Typical API Calls](https://developer.paysafe.com/en/classic-apis/3ds/typical-api-calls/verify-that-the-service-is-accessible/) endpoints.
+Spring Boot project that integrates PaySafe API. The program is able to execute requests to the [Typical API Calls](https://developer.paysafe.com/en/classic-apis/3ds/typical-api-calls/verify-that-the-service-is-accessible/) endpoints through its own API.
 
 ## Paysafe API
 
@@ -13,4 +13,17 @@ GET  ==> /threedsecure/v1/accounts/{account_id}/authentications/{authentication_
 GET  ==> /threedsecure/v1/accounts/{account_id}/authentications/{authentication_id}?fields=enrollmentchecks
 ```
 
-## TODO - add docs for the api calls
+## Build and run
+
+```
+mvn clean install
+java -jar target/paysafe-api-client-0.0.1-SNAPSHOT.jar
+```
+
+## Execute calls
+
+```
+http://localhost:8090/servicestatus
+```
+
+> This API makes call to `/threedsecure/monitor` and if everything is ok, it should return `3DS Service Status: READY`.
