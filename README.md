@@ -31,6 +31,10 @@ http://localhost:8090/servicestatus
 > Makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
 
 ```
+# By using the test account id from application.properties
+http://localhost:8090/testaccount/enrollmentchecks
+
+# By passing the account id as path variable
 http://localhost:8090/accounts/{account_id}/enrollmentchecks
 ```
 

@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class PaysafeApiClientApplication {
-	
+
 	@Bean
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
@@ -16,5 +16,4 @@ public class PaysafeApiClientApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PaysafeApiClientApplication.class, args);
 	}
-
 }
