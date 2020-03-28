@@ -1,5 +1,8 @@
 package com.paysafe.client.paysafeapiclient.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -8,15 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.paysafe.client.paysafeapiclient.models.Authentication;
 import com.paysafe.client.paysafeapiclient.models.EnrollmentCheck;
 import com.paysafe.client.paysafeapiclient.models.ThreeDEnrollment;
+import com.paysafe.client.paysafeapiclient.models.ThreeDResult;
 import com.paysafe.client.paysafeapiclient.services.EnrollmentCheckService;
 
 @RestController
 public class EnrollmentCheckController {
 
-//	@Value("${paysafe.threedsecure.service.baseurl.production}")
-//	using mock server instead of production
 	@Value("${paysafe.threedsecure.service.baseurl.mock}")
 	private String baseUrlPath;
 
@@ -25,7 +30,10 @@ public class EnrollmentCheckController {
 
 	@Value("${paysafe.threedsecure.service.enrollmentchecks}")
 	private String enrollmentChecksPath;
-	
+
+	@Value("${paysafe.threedsecure.service.authentications}")
+	private String authenticationsPath;
+
 	@Value("${test.account.id}")
 	private String testAccountId;
 
@@ -35,30 +43,55 @@ public class EnrollmentCheckController {
 	@Autowired
 	private EnrollmentCheckService enrollmentCheckService;
 	
-	private HttpEntity<EnrollmentCheck> request;
+	private HttpEntity<EnrollmentCheck> enrollmentCheckReq = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
+
+	@RequestMapping("/testaccount/enrollmentchecks")
+	public String checkCardholderAuthentication() {
+
+		String url = baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath;
+		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckReq, EnrollmentCheck.class);
+
+		fillEnrollmentCheckService(enrollmentCheck);
+
+		return getCardholderAuthentication(enrollmentCheckService.getEnrollmentCheck());
+	}
 
 	@RequestMapping("/accounts/{id}/enrollmentchecks")
 	public String checkCardholderAuthentication(@PathVariable String id) {
 
-		request = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
-		EnrollmentCheck enrollmentCheck = restTemplate
-				.postForObject(baseUrlPath + accountsPath + id + enrollmentChecksPath, request, EnrollmentCheck.class);
+		String url = baseUrlPath + accountsPath + id + enrollmentChecksPath;
+		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckReq, EnrollmentCheck.class);
 
 		fillEnrollmentCheckService(enrollmentCheck);
-		
-		return getCardholderAuthentication(enrollmentCheck);
+
+		return getCardholderAuthentication(enrollmentCheckService.getEnrollmentCheck());
 	}
 	
-	@RequestMapping("/testaccount/enrollmentchecks")
-	public String checkCardholderAuthentication() {
+	@RequestMapping("/testaccount/enrollmentchecks/authentications")
+	public String getAuthenticationResult() {
 
-		request = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
-		EnrollmentCheck enrollmentCheck = restTemplate
-				.postForObject(baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath, request, EnrollmentCheck.class);
-
-		fillEnrollmentCheckService(enrollmentCheck);
+		String url = baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath + "/"
+				+ enrollmentCheckService.getEnrollmentCheck().getId() + authenticationsPath;
 		
-		return getCardholderAuthentication(enrollmentCheck);
+		// request body parameters
+		Map<String, String> map = new HashMap<>();
+		map.put("merchantRefNum", enrollmentCheckService.getEnrollmentCheck().getMerchantRefNum());
+		map.put("paRes", enrollmentCheckService.getEnrollmentCheck().getPaReq());
+		
+		HttpEntity<Map<String, String>> request = new HttpEntity<>(map);
+		Authentication authentication = restTemplate.postForObject(url, request, Authentication.class);
+		
+		if (authentication.getThreeDResult() == ThreeDResult.Y) {
+			return "The cardholder successfully authenticated with their card issuer.";
+		} else if (authentication.getThreeDResult() == ThreeDResult.A) {
+			return "The cardholder authentication was attempted.";
+		} else if (authentication.getThreeDResult() == ThreeDResult.N) {
+			return "The cardholder failed to successfully authenticate with their card issuer.";
+		} else if (authentication.getThreeDResult() == ThreeDResult.U) {
+			return "Authentication with the card issuer was unavailable.";
+		} else {
+			return "An error occurred during authentication.";
+		}
 	}
 
 	private String getCardholderAuthentication(EnrollmentCheck enrollmentCheck) {
@@ -70,7 +103,7 @@ public class EnrollmentCheckController {
 			return "Cardholder not enrolled in authentication.";
 		}
 	}
-	
+
 	private void fillEnrollmentCheckService(EnrollmentCheck enrollmentCheck) {
 		enrollmentCheckService.getEnrollmentCheck().setAcsURL(enrollmentCheck.getAcsURL());
 		enrollmentCheckService.getEnrollmentCheck().setTxnTime(enrollmentCheck.getTxnTime());
