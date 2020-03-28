@@ -32,8 +32,8 @@ public class EnrollmentCheckController {
 
 	@RequestMapping("/accounts/{id}/enrollmentchecks")
 	public String getThreeDEnrollmentStatus(@PathVariable String id) {
-
-		// mock EnrollmentCheck for the POST request body
+		
+		// create mock EnrollmentCheck for the post request body
 		CardExpiry cardExpiryMock = new CardExpiry(10, 2020);
 		Card cardMock = new Card("4111111111111111", cardExpiryMock);
 		EnrollmentCheck enrollmentCheckMock = new EnrollmentCheck("merchantABC-123-enrollmentchecks", 5000, "USD",
@@ -41,15 +41,11 @@ public class EnrollmentCheckController {
 				"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36",
 				"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 				"https://www.merchant.com", cardMock);
-
 		HttpEntity<EnrollmentCheck> request = new HttpEntity<>(enrollmentCheckMock);
 
-		// call to /threedsecure/v1/accounts/{account_id}/enrollmentchecks with the
-		// mocked EnrollmentCheck
 		EnrollmentCheck enrollmentCheck = restTemplate
 				.postForObject(baseUrlPath + accountsPath + id + enrollmentChecksPath, request, EnrollmentCheck.class);
 
-		// check and return the threedenrollment status
 		if (enrollmentCheck.getThreeDEnrollment() == ThreeDEnrollment.Y) {
 			return "Cardholder authentication available.";
 		} else if (enrollmentCheck.getThreeDEnrollment() == ThreeDEnrollment.U) {

@@ -22,8 +22,16 @@ java -jar target/paysafe-api-client-0.0.1-SNAPSHOT.jar
 
 ## API
 
+Note that those APIs are executed against a mock server (`https://private-anon-eb6f38e9ae-paysafeapi3dsecurev1.apiary-mock.com`) which means that it doesn't matter what `account_id` will be used for the requests below.
+
 ```
 http://localhost:8090/servicestatus
 ```
 
-> This API makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
+> Makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
+
+```
+http://localhost:8090/accounts/{account_id}/enrollmentchecks
+```
+
+> Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks` using a hardcoded `EnrollmentCheck`. After that checks if  the cardholder is enrolled in 3D Secure and returns one of the three options: `Cardholder authentication available`, `Cardholder not enrolled in authentication` or `Cardholder authentication unavailable`.
