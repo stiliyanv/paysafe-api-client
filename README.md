@@ -15,7 +15,7 @@ GET  ==> /threedsecure/v1/accounts/{account_id}/authentications/{authentication_
 
 ## Build and run
 
-```
+```console
 mvn clean install
 java -jar target/paysafe-api-client-0.0.1-SNAPSHOT.jar
 ```
