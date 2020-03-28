@@ -31,11 +31,18 @@ http://localhost:8090/servicestatus
 > Makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
 
 ```
-# By using the test account id from application.properties
+# Using the test account id from the application.properties
 http://localhost:8090/testaccount/enrollmentchecks
 
-# By passing the account id as path variable
+# Passing the account id as a path variable
 http://localhost:8090/accounts/{account_id}/enrollmentchecks
 ```
 
 > Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks` using a hardcoded `EnrollmentCheck` object. After that checks if  the cardholder is enrolled in 3D Secure and returns one of the three options: `Cardholder authentication available`, `Cardholder not enrolled in authentication` or `Cardholder authentication unavailable`.
+
+```
+# Using the test account id from the application.properties
+http://localhost:8090/testaccount/enrollmentchecks/authentications
+```
+
+> Makes `POST` request to 
