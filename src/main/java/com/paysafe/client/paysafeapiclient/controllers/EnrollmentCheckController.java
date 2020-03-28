@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.paysafe.client.paysafeapiclient.models.Authentication;
 import com.paysafe.client.paysafeapiclient.models.EnrollmentCheck;
 import com.paysafe.client.paysafeapiclient.models.ThreeDEnrollment;
@@ -43,13 +41,15 @@ public class EnrollmentCheckController {
 	@Autowired
 	private EnrollmentCheckService enrollmentCheckService;
 	
-	private HttpEntity<EnrollmentCheck> enrollmentCheckReq = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
+	private HttpEntity<EnrollmentCheck> enrollmentCheckRequest;
+	private HttpEntity<Map<String, String>> authRequest;
 
 	@RequestMapping("/testaccount/enrollmentchecks")
 	public String checkCardholderAuthentication() {
 
 		String url = baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath;
-		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckReq, EnrollmentCheck.class);
+		enrollmentCheckRequest = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
+		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckRequest, EnrollmentCheck.class);
 
 		fillEnrollmentCheckService(enrollmentCheck);
 
@@ -60,7 +60,8 @@ public class EnrollmentCheckController {
 	public String checkCardholderAuthentication(@PathVariable String id) {
 
 		String url = baseUrlPath + accountsPath + id + enrollmentChecksPath;
-		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckReq, EnrollmentCheck.class);
+		enrollmentCheckRequest = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
+		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckRequest, EnrollmentCheck.class);
 
 		fillEnrollmentCheckService(enrollmentCheck);
 
@@ -78,8 +79,8 @@ public class EnrollmentCheckController {
 		map.put("merchantRefNum", enrollmentCheckService.getEnrollmentCheck().getMerchantRefNum());
 		map.put("paRes", enrollmentCheckService.getEnrollmentCheck().getPaReq());
 		
-		HttpEntity<Map<String, String>> request = new HttpEntity<>(map);
-		Authentication authentication = restTemplate.postForObject(url, request, Authentication.class);
+		authRequest = new HttpEntity<>(map);
+		Authentication authentication = restTemplate.postForObject(url, authRequest, Authentication.class);
 		
 		if (authentication.getThreeDResult() == ThreeDResult.Y) {
 			return "The cardholder successfully authenticated with their card issuer.";

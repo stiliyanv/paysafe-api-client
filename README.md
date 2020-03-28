@@ -28,21 +28,29 @@ Note that those APIs are executed against a mock server (`https://private-anon-e
 http://localhost:8090/servicestatus
 ```
 
-> Makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
+Makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
 
 ```
 # Using the test account id from the application.properties
 http://localhost:8090/testaccount/enrollmentchecks
 
-# Passing the account id as a path variable
+# Passing the account id as a path variable, this will have effect with test/prod server (not mock)
 http://localhost:8090/accounts/{account_id}/enrollmentchecks
 ```
 
-> Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks` using a hardcoded `EnrollmentCheck` object. After that checks if  the cardholder is enrolled in 3D Secure and returns one of the three options: `Cardholder authentication available`, `Cardholder not enrolled in authentication` or `Cardholder authentication unavailable`.
+Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks` using a hardcoded `EnrollmentCheck` object. After that checks if  the cardholder is enrolled in 3D Secure and returns one of the three options:
+- Cardholder authentication available
+- Cardholder not enrolled in authentication
+- Cardholder authentication unavailable
 
 ```
 # Using the test account id from the application.properties
 http://localhost:8090/testaccount/enrollmentchecks/authentications
 ```
 
-> Makes `POST` request to 
+Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks/{enrollmentcheck_id}/authentications` and returns one of the following authentication results:
+- The cardholder successfully authenticated with their card issuer.
+- The cardholder authentication was attempted.
+- The cardholder failed to successfully authenticate with their card issuer.
+- Authentication with the card issuer was unavailable.
+- An error occurred during authentication.
