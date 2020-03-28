@@ -20,9 +20,9 @@ mvn clean install
 java -jar target/paysafe-api-client-0.0.1-SNAPSHOT.jar
 ```
 
-## API
+## paysafe-api-client API
 
-Note that those APIs are executed against a mock server (`https://private-anon-eb6f38e9ae-paysafeapi3dsecurev1.apiary-mock.com`) which means that it doesn't matter what `account_id` will be used for the requests below.
+> The APIs below are executed against a mock server (`https://private-anon-eb6f38e9ae-paysafeapi3dsecurev1.apiary-mock.com`).
 
 ```
 http://localhost:8090/servicestatus
