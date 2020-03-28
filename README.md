@@ -1,6 +1,6 @@
 # paysafe-api-client
 
-Spring Boot project that integrates PaySafe API. The program is able to execute requests to the [Typical API Calls](https://developer.paysafe.com/en/classic-apis/3ds/typical-api-calls/verify-that-the-service-is-accessible/) endpoints through its own API.
+Spring Boot project that integrates PaySafe API. The program is able to execute requests to some of the [Typical API Calls](https://developer.paysafe.com/en/classic-apis/3ds/typical-api-calls/verify-that-the-service-is-accessible/) endpoints through its own API.
 
 ## Paysafe API
 
@@ -34,4 +34,4 @@ http://localhost:8090/servicestatus
 http://localhost:8090/accounts/{account_id}/enrollmentchecks
 ```
 
-> Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks` using a hardcoded `EnrollmentCheck`. After that checks if  the cardholder is enrolled in 3D Secure and returns one of the three options: `Cardholder authentication available`, `Cardholder not enrolled in authentication` or `Cardholder authentication unavailable`.
+> Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks` using a hardcoded `EnrollmentCheck` object. After that checks if  the cardholder is enrolled in 3D Secure and returns one of the three options: `Cardholder authentication available`, `Cardholder not enrolled in authentication` or `Cardholder authentication unavailable`.

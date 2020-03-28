@@ -8,14 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.paysafe.client.paysafeapiclient.models.Card;
-import com.paysafe.client.paysafeapiclient.models.CardExpiry;
 import com.paysafe.client.paysafeapiclient.models.EnrollmentCheck;
 import com.paysafe.client.paysafeapiclient.models.ThreeDEnrollment;
+import com.paysafe.client.paysafeapiclient.services.EnrollmentCheckService;
 
 @RestController
 public class EnrollmentCheckController {
-	
+
 //	@Value("${paysafe.threedsecure.service.baseurl.production}")
 //	using mock server instead of production
 	@Value("${paysafe.threedsecure.service.baseurl.mock}")
@@ -30,22 +29,25 @@ public class EnrollmentCheckController {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Autowired
+	private EnrollmentCheckService enrollmentCheckService;
+
 	@RequestMapping("/accounts/{id}/enrollmentchecks")
 	public String getThreeDEnrollmentStatus(@PathVariable String id) {
-		
-		// create mock EnrollmentCheck for the post request body
-		CardExpiry cardExpiryMock = new CardExpiry(10, 2020);
-		Card cardMock = new Card("4111111111111111", cardExpiryMock);
-		EnrollmentCheck enrollmentCheckMock = new EnrollmentCheck("merchantABC-123-enrollmentchecks", 5000, "USD",
-				"172.0.0.1",
-				"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36",
-				"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-				"https://www.merchant.com", cardMock);
-		HttpEntity<EnrollmentCheck> request = new HttpEntity<>(enrollmentCheckMock);
+
+		HttpEntity<EnrollmentCheck> request = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
 
 		EnrollmentCheck enrollmentCheck = restTemplate
 				.postForObject(baseUrlPath + accountsPath + id + enrollmentChecksPath, request, EnrollmentCheck.class);
 
+		enrollmentCheckService.getEnrollmentCheck().setAcsURL(enrollmentCheck.getAcsURL());
+		enrollmentCheckService.getEnrollmentCheck().setTxnTime(enrollmentCheck.getTxnTime());
+		enrollmentCheckService.getEnrollmentCheck().setStatus(enrollmentCheck.getStatus());
+		enrollmentCheckService.getEnrollmentCheck().setThreeDEnrollment(enrollmentCheck.getThreeDEnrollment());
+		enrollmentCheckService.getEnrollmentCheck().setId(enrollmentCheck.getId());
+		enrollmentCheckService.getEnrollmentCheck().setPaReq(enrollmentCheck.getPaReq());
+		enrollmentCheckService.getEnrollmentCheck().setEci(enrollmentCheck.getEci());
+		
 		if (enrollmentCheck.getThreeDEnrollment() == ThreeDEnrollment.Y) {
 			return "Cardholder authentication available.";
 		} else if (enrollmentCheck.getThreeDEnrollment() == ThreeDEnrollment.U) {
