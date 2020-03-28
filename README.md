@@ -31,10 +31,7 @@ http://localhost:8090/servicestatus
 Makes `GET` request to `/threedsecure/monitor` and if the service is available, it will return `3DS Service Status: READY`.
 
 ```
-# Using the test account id from the application.properties
 http://localhost:8090/testaccount/enrollmentchecks
-
-# Passing the account id as a path variable, this will have effect with test/prod server (not mock)
 http://localhost:8090/accounts/{account_id}/enrollmentchecks
 ```
 
@@ -44,7 +41,6 @@ Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks
 - Cardholder authentication unavailable
 
 ```
-# Using the test account id from the application.properties
 http://localhost:8090/testaccount/enrollmentchecks/authentications
 ```
 
