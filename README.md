@@ -2,17 +2,6 @@
 
 Spring Boot project that integrates PaySafe API. The program is able to execute requests to some of the [Typical API Calls](https://developer.paysafe.com/en/classic-apis/3ds/typical-api-calls/verify-that-the-service-is-accessible/) endpoints through its own API.
 
-## Paysafe 3D Secure API
-
-```
-GET  ==> /threedsecure/monitor
-POST ==> /threedsecure/v1/accounts/{account_id}/enrollmentchecks
-GET  ==> /threedsecure/v1/accounts/{account_id}/enrollmentchecks/{enrollmentcheck_id}
-POST ==> /threedsecure/v1/accounts/{account_id}/enrollmentchecks/{enrollmentcheck_id}/authentications
-GET  ==> /threedsecure/v1/accounts/{account_id}/authentications/{authentication_id}
-GET  ==> /threedsecure/v1/accounts/{account_id}/authentications/{authentication_id}?fields=enrollmentchecks
-```
-
 ## Build and run
 
 ```console
@@ -64,3 +53,14 @@ GET ==> http://localhost:8090/testaccount/authentication
 ```
 
 - Makes `GET` request to `/threedsecure/v1/accounts/{account_id}/authentications/{authentication_id}` using a test `account_id` and hardcoded `Authentication` object. If the `GET` is successful, it should return "Successfully retrieved authentication with id: 5d4db3bc-34c9-417f-a051-0d992ad9284e".
+
+## Paysafe 3D Secure API
+
+```
+GET  ==> /threedsecure/monitor
+POST ==> /threedsecure/v1/accounts/{account_id}/enrollmentchecks
+GET  ==> /threedsecure/v1/accounts/{account_id}/enrollmentchecks/{enrollmentcheck_id}
+POST ==> /threedsecure/v1/accounts/{account_id}/enrollmentchecks/{enrollmentcheck_id}/authentications
+GET  ==> /threedsecure/v1/accounts/{account_id}/authentications/{authentication_id}
+GET  ==> /threedsecure/v1/accounts/{account_id}/authentications/{authentication_id}?fields=enrollmentchecks
+```
