@@ -2,7 +2,7 @@
 
 Spring Boot project that integrates PaySafe API. The program is able to execute requests to some of the [Typical API Calls](https://developer.paysafe.com/en/classic-apis/3ds/typical-api-calls/verify-that-the-service-is-accessible/) endpoints through its own API.
 
-## Paysafe API
+## Paysafe 3D Secure API
 
 ```
 GET  ==> /threedsecure/monitor
@@ -22,7 +22,7 @@ java -jar target/paysafe-api-client-0.0.1-SNAPSHOT.jar
 
 ## Usage
 
-> The APIs below are executed against a mock server (`https://private-anon-eb6f38e9ae-paysafeapi3dsecurev1.apiary-mock.com`). Having said that, the APIs below that requires `account_id` will always return the same result no matter what value is used.
+> The APIs below are executed against a mock server: `https://private-anon-eb6f38e9ae-paysafeapi3dsecurev1.apiary-mock.com`
 
 ```
 GET ==> http://localhost:8090/service-status
@@ -32,24 +32,23 @@ Makes `GET` request to `/threedsecure/monitor` and if the service is available, 
 
 ```
 GET ==> http://localhost:8090/testaccount/enrollmentchecks
-GET ==> http://localhost:8090/accounts/{account_id}/enrollmentchecks
 ```
 
 Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks` using a test `account_id` and hardcoded `EnrollmentCheck` object. After that, checks if  the cardholder is enrolled in 3D Secure and returns one of the three options:
-- Cardholder authentication available.
-- Cardholder not enrolled in authentication.
-- Cardholder authentication unavailable.
+- "Cardholder authentication available."
+- "Cardholder not enrolled in authentication."
+- "Cardholder authentication unavailable."
 
 ```
 GET ==> http://localhost:8090/testaccount/enrollmentchecks/authentications
 ```
 
 Makes `POST` request to `/threedsecure/v1/accounts/{account_id}/enrollmentchecks/{enrollmentcheck_id}/authentications` using a test `account_id` and hardcoded `EnrollmentCheck` object. It returns one of the following authentication results:
-- The cardholder successfully authenticated with their card issuer.
-- The cardholder authentication was attempted.
-- The cardholder failed to successfully authenticate with their card issuer.
-- Authentication with the card issuer was unavailable.
-- An error occurred during authentication.
+- "The cardholder successfully authenticated with their card issuer."
+- "The cardholder authentication was attempted."
+- "The cardholder failed to successfully authenticate with their card issuer."
+- "Authentication with the card issuer was unavailable."
+- "An error occurred during authentication."
 
 ```
 GET ==> http://localhost:8090/testaccount/authentication
