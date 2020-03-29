@@ -10,22 +10,20 @@ import com.paysafe.client.paysafeapiclient.models.Monitor;
 
 @RestController
 public class MonitorController {
-	
-//	@Value("${paysafe.threedsecure.service.baseurl.production}")
-//	using mock server instead of production
+
 	@Value("${paysafe.threedsecure.service.baseurl.mock}")
 	private String baseUrlPath;
-	
+
 	@Value("${paysafe.threedsecure.service.monitor}")
 	private String monitorPath;
 
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@RequestMapping("/servicestatus")
+	@RequestMapping("/service-status")
 	public String getServiceStatus() {
 		Monitor monitor = restTemplate.getForObject(baseUrlPath + monitorPath, Monitor.class);
-		
+
 		return "3DS Service Status: " + monitor.getStatus();
 	}
 }

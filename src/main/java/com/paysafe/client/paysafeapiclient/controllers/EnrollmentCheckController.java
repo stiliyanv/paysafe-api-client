@@ -40,16 +40,18 @@ public class EnrollmentCheckController {
 
 	@Autowired
 	private EnrollmentCheckService enrollmentCheckService;
-	
+
 	private HttpEntity<EnrollmentCheck> enrollmentCheckRequest;
 	private HttpEntity<Map<String, String>> authRequest;
+	private String url;
 
-	@RequestMapping("/testaccount/enrollmentchecks")
+	@RequestMapping("/testaccount/enrollmentcheck")
 	public String checkCardholderAuthentication() {
 
-		String url = baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath;
+		url = baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath;
 		enrollmentCheckRequest = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
-		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckRequest, EnrollmentCheck.class);
+		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckRequest,
+				EnrollmentCheck.class);
 
 		fillEnrollmentCheckService(enrollmentCheck);
 
@@ -59,29 +61,30 @@ public class EnrollmentCheckController {
 	@RequestMapping("/accounts/{id}/enrollmentchecks")
 	public String checkCardholderAuthentication(@PathVariable String id) {
 
-		String url = baseUrlPath + accountsPath + id + enrollmentChecksPath;
+		url = baseUrlPath + accountsPath + id + enrollmentChecksPath;
 		enrollmentCheckRequest = new HttpEntity<>(enrollmentCheckService.getEnrollmentCheck());
-		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckRequest, EnrollmentCheck.class);
+		EnrollmentCheck enrollmentCheck = restTemplate.postForObject(url, enrollmentCheckRequest,
+				EnrollmentCheck.class);
 
 		fillEnrollmentCheckService(enrollmentCheck);
 
 		return getCardholderAuthentication(enrollmentCheckService.getEnrollmentCheck());
 	}
-	
-	@RequestMapping("/testaccount/enrollmentchecks/authentications")
+
+	@RequestMapping("/testaccount/enrollmentcheck/authentication")
 	public String getAuthenticationResult() {
 
-		String url = baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath + "/"
+		url = baseUrlPath + accountsPath + testAccountId + enrollmentChecksPath + "/"
 				+ enrollmentCheckService.getEnrollmentCheck().getId() + authenticationsPath;
-		
+
 		// request body parameters
 		Map<String, String> map = new HashMap<>();
 		map.put("merchantRefNum", enrollmentCheckService.getEnrollmentCheck().getMerchantRefNum());
 		map.put("paRes", enrollmentCheckService.getEnrollmentCheck().getPaReq());
-		
+
 		authRequest = new HttpEntity<>(map);
 		Authentication authentication = restTemplate.postForObject(url, authRequest, Authentication.class);
-		
+
 		if (authentication.getThreeDResult() == ThreeDResult.Y) {
 			return "The cardholder successfully authenticated with their card issuer.";
 		} else if (authentication.getThreeDResult() == ThreeDResult.A) {
